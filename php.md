@@ -1,3 +1,4 @@
+### simple log method
 ```
 private function log($data) {
   $message = print_r($data, true);
