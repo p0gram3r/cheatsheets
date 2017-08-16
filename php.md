@@ -1,3 +1,4 @@
+```
 private function log($data) {
   $message = print_r($data, true);
   if (is_string($data)) {
@@ -12,3 +13,4 @@ private function log($data) {
   fwrite($handle, date('c').': '.$message.PHP_EOL);
   fclose($handle);
 }
+```
