@@ -1,5 +1,8 @@
 # loop over content of a file
-while read p; do
-  echo $p
+while read l; do
+  echo $l
 done <fileToReadFrom.txt
 
+for l in $(cat filetoReadFrom.txt); do
+  echo $l
+done
