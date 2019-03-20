@@ -47,7 +47,7 @@ kubectl delete (object-type) (name_of_object)
 kubectl edit (object-type) (name_of_object)
 
 # get shell to container in pod
-kubectl exec -it (name_of_container) -- /bin/bash
+kubectl exec -it (name_of_container) -- /bin/sh
 
 # read file inside container
 kubectl exec (name_of_container) cat /log/app.log
@@ -313,8 +313,6 @@ kubectl rollout history (name-of-deployment)
   ```
   kubectl rollout undo (name-of-deployment)
   ```
-
-- hint: the `kubectl run (name) --image=(image)` command creates a Deployment with a single pod
 
 
 ## Pod commands and arguments
