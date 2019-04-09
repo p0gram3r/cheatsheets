@@ -1,19 +1,3 @@
-## definition files
-- yaml format
-- always contains 4 mandatory top level fields:
-```
-apiVersion: v1
-kind: Pod
-metadata:
-  name: myapp-pod
-  labels:
-    app: myapp
-spec:
-  containers:
-    - name: nginx-container
-      image: nginx
-```
-
 ## useful commands
 ```
 # saves some typing :-)
@@ -32,9 +16,9 @@ kubectl create -f definition.yml
 
 # create an object based on an image
 # requires configured docker registry to download the images from
-kubectl run nginx --image nginx                      ### Deployment
-kubectl run nginx --image nginx --restart=Never      ### Pod
-kubectl run nginx --image nginx --restart=OnFailure  ### job
+kubectl run nginx --image nginx                      # Deployment
+kubectl run nginx --image nginx --restart=Never      # Pod
+kubectl run nginx --image nginx --restart=OnFailure  # Job
 
 # shows lots of information about an object
 kubectl describe (object-type) (name_of_object)
@@ -64,6 +48,23 @@ kubectl exec (name_of_container) cat /log/app.log
 - pv for Persistent Volumes
 - pvc for Persistent Volumes Claims
 - sa for service accounts
+
+
+## Definition Files
+- yaml format
+- always contains 4 mandatory top level fields:
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    app: myapp
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx
+```
 
 
 ## Pods

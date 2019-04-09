@@ -3,8 +3,7 @@
 
 
 ## Preparation
-- new, non-encrypted ssh key: `ssh-keygen -t ecdsa`
-  - don't set passphrase, so automation tools can use it
+- create a new, non-encrypted ssh key without passphrase, so automation tools can use it!
 
 
 ## Workflow
@@ -215,6 +214,24 @@ count = "${replace(replace(var.instance_type, "/^[^t].*/", "0"), "/^t.*$/", "1")
 user_data = "${element(concat(data.template_file.list_a.*.rendered, data.template_file.list_b.*.rendered), 0)}"
 ```
 
+
+## Provisioner
+- are used to execute scripts on a local or remote machine as part of resource creation or destruction
+- added directly to any resource:
+```
+resource "aws_instance" "web" {
+  # ...
+
+  provisioner "local-exec" {
+    command = "echo ${self.private_ip} > file.txt"
+  }
+}
+```
+
+- when multiple provisioners are specified within a resource, they are executed in the order they're defined
+- Many provisioners require access to the remote resource. For example, a provisioner may need to use SSH or WinRM to connect to the resource.
+
+
 ## Misc
 - use `terraform fmt` command to format all files using the default Terraform code style. Ideally as pre-commit hook
 - Terratest - a library for running automated tests against your infrastructure
@@ -222,4 +239,5 @@ user_data = "${element(concat(data.template_file.list_a.*.rendered, data.templat
 
 
 ## Additional material
+- (Official Terraform documentation)[https://www.terraform.io/docs/]
 - (A Comprehensive Guide to Terraform)[https://blog.gruntwork.io/a-comprehensive-guide-to-terraform-b3d32832baca]
