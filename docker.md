@@ -29,6 +29,30 @@ docker ps -a
 
 - starting containers
 ```
+# quick start using random ports
+docker run -d -P --name %ALIAS% %IMAGE_NAME%
+
+# quick start with custom port forwarding
+docker run -d -p 8080:80 --name %ALIAS% %IMAGE_NAME%
+```
+
+- stopping containers
+```
+docker stop %custom_container_name%
+docker stop %containerID%
+```
+
+- removing containers
+```
+docker rm %containerID%
+
+# remove all containers in status=EXIT
+docker rm $(docker ps -a -q -f status=exited)
+docker container prune
+```
+
+- other options to start a container
+```
 # starting a container
 docker run %image_name$
 docker run %image_name$ %command_to_execute%
@@ -50,21 +74,6 @@ docker run -P %image_name%
 
 # run container in background (detach from current session)
 docker run -d %image_name%
-```
-
-- stopping containers
-```
-docker stop %custom_container_name%
-docker stop %containerID%
-```
-
-- removing containers
-```
-docker rm %containerID%
-
-# remove all containers in status=EXIT
-docker rm $(docker ps -a -q -f status=exited)
-docker container prune
 ```
 
 
