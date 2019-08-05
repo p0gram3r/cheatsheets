@@ -1,4 +1,20 @@
-1. Store the vault password in some file, e.g. `vault.passwd`. Make sure to add it to `.gitnignore`,
+# custom git config per directory
+1. Create a custom git config file (e.g `~/code/fancy/.gitconfig`) containing the required settings:
+    ```
+   [user]
+           name = André Karstensen
+           email = andre.karstensen@fancy.company.org
+    ```
+2. update global git config to include the custom one:
+   ````
+   [includeIf "gitdir:~/code/fancy/"]
+       path = ~/code/fancy/.gitconfig
+   ```
+
+
+# git diff and ansible-vault encrypted files
+
+1. Store the vault password in some file, e.g. `vault.passwd`. Make sure to add it to `.gitignore`,
  too!
     ```
     echo "mySuuperSecretVaultPassword" > vault.passwd
