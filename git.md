@@ -1,3 +1,12 @@
+# Misc
+
+```
+# Interactively choose hunks of patch between the index and the work tree
+git add -p
+git add --patch
+```
+
+
 # custom git config per directory
 1. Create a custom git config file (e.g `~/code/fancy/.gitconfig`) containing the required settings:
     ```
@@ -6,7 +15,7 @@
            email = andre.karstensen@fancy.company.org
     ```
 2. update global git config to include the custom one:
-   ````
+   ```
    [includeIf "gitdir:~/code/fancy/"]
        path = ~/code/fancy/.gitconfig
    ```

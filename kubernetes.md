@@ -543,7 +543,7 @@ kubectl create serviceaccount (name-of-serviceaccount)
 - default: balance equally on all available nodes
 - Taints are set on Nodes:
 ```
-kubectl taint node (node-name) key=value:taint-effect
+kubectl taint node (node-name) (key)=(value):(taint-effect)
 ```
 
 - possible taint-effects:
@@ -585,6 +585,11 @@ kubectl taint node (node-name) key=value:taint-effect
       - name: (...)
     nodeSelector:
       size: Large
+  ```
+
+- can also be applied via patch command:
+  ```
+  kubectl patch deployment (deployment-name) -n (namespace) --patch '{"spec": {"template": {"spec": {"nodeSelector": {("label": "value"}}}}}'
   ```
 
 - only works for simple selectors, but not for advanced expressions like "Large OR Medium" or "NOT Small"
