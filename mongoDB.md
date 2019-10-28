@@ -32,6 +32,9 @@ db.things.find({c: {$exists: true}})
 // string = 2
 db.things.find({a: {$type: 1}})
 
+// find with like
+db.users.find({"name": /asdf/})
+
 // find with regex
 db.users.find({"name":{$regex: "q"}})
 
@@ -73,9 +76,9 @@ db.catalog.find({ "price": {$gt: 10000}, "reviews.rating": {$gte: 5} })
 
 
 ### working with cursors
+- use cursors to work with query results
 ```
-// use cursors to work with query results
-// the "; null;" at the end prevents the shelll to print the result of the previous action
+// the "; null;" at the end prevents the shell to print the result of the previous action!
 cur = db.things.find(); null;
 cur.limit(2); null;
 cur.sort( {a: -1} ); null;
@@ -83,15 +86,16 @@ while (cur.hasNext()) printjson(cur.next());
 
 // skipping two elements
 cur.skip(2)
+```
 
-// When can you change the behavior of a cursor, by applying a sort, skip, or limit to it?
-can be done at any point before the first document is called and before a length check!
+- when can you change the behavior of a cursor, by applying a sort, skip, or limit to it?
+  - can be done at any point before the first document is called and before a length check!
 
+```
 // number of elements in cursor
 cur.length()
 
-// exercise:
-Find all exam scores greater than or equal to 65, and sort those scores from lowest to highest.
+// exercise: Find all exam scores greater than or equal to 65, and sort those scores from lowest to highest.
 cur = db.things.find({"type": "exam", "score": {"$gte": 65}}); null;
 cur.sort( {"score": 1} ); null;
 cur.limit(5);
@@ -239,6 +243,13 @@ db.fun.aggregate([
   { $sort:{c:-1} }, 
   { $group:{_id:"$a", c:{$first:"$c"}} }
 ])
+```
+
+
+### import existing JSON into mongoDB
+- file needs to contain a json array!
+```
+mongoimport --db (db_name) --collection (coll) --file a.json --jsonArray
 ```
 
 
