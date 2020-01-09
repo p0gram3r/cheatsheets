@@ -2,8 +2,9 @@
 ```
 # saves some typing :-)
 alias k=kubectl
-alias a='rm a && vi a'
-alias c='kubectl create -f a'
+
+# some cluster information
+kubectl cluster-info
 
 # list all Pods/... and show status information
 kubectl get (object-type)
