@@ -268,9 +268,9 @@ kubectl config set-context $(kubectl config current-context) --namespace=(namesp
     hard:
       pods: "10"
       requests.cpu: "4"
-      requests.memory: 5G1
+      requests.memory: 5Gi
       limits.cpu: "10"
-      limits.memory: 10G1
+      limits.memory: 10Gi
 
   ```
 
@@ -297,7 +297,7 @@ kubectl rollout history (name-of-deployment)
 - possible rollout strategies:
   - Recreate = destroy all instances simultaneously and create new ones
   - Rolling-Update = Default: shut down and re-create a few instances and repeat until finished
-  - defined in `spec / strategy / type`
+  - defined in `.spec.strategy.type`
 - applying changes to existing deployments:
   ```
   # using existing yaml
@@ -315,6 +315,12 @@ kubectl rollout history (name-of-deployment)
   ```
   kubectl rollout undo (name-of-deployment)
   ```
+
+#### Parameters for RollingUpdates
+- `.spec.strategy.rollingUpdate.maxUnavailable` = maximum number of Pods that can be unavailable during the update process
+- `.spec.strategy.rollingUpdate.maxSurge` = maximum number of Pods that can be created over the desired number of Pods
+- default values for both is `25%`
+- hack: `maxUnavailable=0` & `maxSurge=1` will create a new Pod without destroying an old one! 
 
 
 ## Pod commands and arguments
