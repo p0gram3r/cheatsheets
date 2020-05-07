@@ -1,8 +1,5 @@
 ## useful commands
 ```
-# saves some typing :-)
-alias k=kubectl
-
 # some cluster information
 kubectl cluster-info
 
@@ -11,6 +8,9 @@ kubectl get (object-type)
 
 # create a pod definition yaml based on running pod
 kubectl get pod <pod-name> -o yaml > pod-definition.yaml
+
+# extract pod name from definition
+kubectl get pods -n <ns> -l "<labelKey=labelValue>" -o jsonpath="{.items[0].metadata.name}"
 
 # create an object based on a definition yaml
 kubectl create -f definition.yml
@@ -78,45 +78,9 @@ spec:
 
 ## ReplicaSets
 
-#### Replication Controllers
 - ensure number of running Pods is constant
 - may span across multiple nodes in a cluster
-- predecessor of ReplicaSets!
-- A replication controller definition file must provide the number of replicas and a template of a Pod definition
-  ```
-  apiVersion: v1
-  kind: ReplicationController
-  metadata:
-    name: myapp-rc
-    labels:
-      app: myapp
-  spec:
-    replicas: 3
-    template:
-      metadata:
-        name: myapp-pod
-        labels:
-          app: myapp
-          type: frontend
-      spec:
-        containers:
-          - name: nginx-container
-            image: nginx
-  ```
-
-- commands
-  ```
-  # create ReplicationController based on yaml
-  kubectl create -f (rc-definition.yml)
-
-  # list all replication controllers
-  kubectl get replicationcontroller
-  ```
-
-- all Pods of a Replication Controller are automatically prefixed with the name of the the Replication Controller plus a random hash
-
-#### ReplicaSets
-- successor of Replication Controllers, slightly different definition format
+- definition
   ```
   apiVersion: apps/v1
   kind: ReplicaSet
@@ -289,7 +253,7 @@ kubectl config set-context $(kubectl config current-context) --namespace=(namesp
 ## Rollout and Versioning
 
 ```
-kubectl rollout status (name-of-deployment
+kubectl rollout status (name-of-deployment)
 
 kubectl rollout history (name-of-deployment)
 ```
@@ -694,7 +658,7 @@ kubectl taint node (node-name) (key)=(value):(taint-effect)
 
 ## Monitoring a K8s cluster
 
-- lverages tools like Metrics Server, Prometheus, ElasticStack, ...
+- leverages tools like Metrics Server, Prometheus, ElasticStack, ...
 - Metrics Server stores data in-memory only
 - K8s runs an agent on each node called "Kubelet"
   - receives API commands from master node
@@ -973,6 +937,23 @@ spec:
       claimName: (myclaim)
   ```
 
+- emptyDir: a temporary directory that shares a pod's lifetime
+  ```
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: test-pd
+  spec:
+    containers:
+    - image: k8s.gcr.io/test-webserver
+      name: test-container
+      volumeMounts:
+      - mountPath: /cache
+        name: cache-volume
+    volumes:
+    - name: cache-volume
+      emptyDir: {}
+  ```
 
 ## Persistent Volumes
 

@@ -36,3 +36,38 @@ containers:
       containerPort: 9131
       protocol: TCP
 ```
+
+# Prometheus Object
+
+### serviceMonitorNamespaceSelector
+- By default, the Prometheus Operator only scans the namespace of the Prometheus CRD for ServiceMonitors
+- to scan other namespaces: set `serviceMonitorNamespaceSelector` field
+- The value must be of type `k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector`:
+  ```
+  serviceMonitorNamespaceSelector:
+    matchLabels:
+      prometheus: front-end-team
+  ```
+
+
+- add this label to each namespace that you want to scan for ServiceMonitors (e.g. prometheus: front-end-team) for a particular Prometheus (e.g. the front-end-team Prometheus)
+  ```
+  metadata:
+    labels:
+      prometheus: front-end-team
+  ```
+
+
+# ServiceMonitor
+- https://github.com/coreos/prometheus-operator/blob/master/Documentation/design.md#servicemonitor
+- name shown in UI = default/app-foo/0
+  - default = namespace of the SM
+  - app-foo = name of the SM
+
+### monitoring service in other namespace
+```
+spec:
+  namespaceSelector:
+    matchNames:
+    - foo
+```
