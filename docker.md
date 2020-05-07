@@ -1,10 +1,3 @@
-### General
-```
-# get information on running containers, images, environment, etc.
-docker info
-```
-
-
 ### Images
 ```
 # fetch images
@@ -21,29 +14,22 @@ docker rmi %image_name%
 
 
 ### Containers
-- list containers
 ```
+# list containers
 docker container ls -a
 docker ps -a
-```
 
-- starting containers
-```
 # quick start using random ports
 docker run -d -P --name %ALIAS% %IMAGE_NAME%
 
 # quick start with custom port forwarding
 docker run -d -p 8080:80 --name %ALIAS% %IMAGE_NAME%
-```
 
-- stopping containers
-```
+# stopping containers
 docker stop %custom_container_name%
 docker stop %containerID%
-```
 
-- removing containers
-```
+# removing containers
 docker rm %containerID%
 
 # remove all containers in status=EXIT
@@ -145,4 +131,7 @@ docker volume ls
 
 # inspect a volume
 docker volume inspect %volume_name%
+
+# run container with volume
+docker run -d -p 8081:8081 -p 8082:8082 --name nexus -v nexus-data:/target/path/nexus-data sonatype/nexus3
 ```

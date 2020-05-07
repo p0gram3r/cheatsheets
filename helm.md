@@ -1,15 +1,39 @@
-### Initializing Helm
-In a newly created Kubernetes cluster, Helm might not have been fully initialized yet. To do this, run
+### Creating Helm Charts
 ```
-helm init
+# Create a blank chart
+helm create <chartname>
 
-# see https://github.com/helm/helm/issues/3055#issuecomment-356347732
-kubectl create serviceaccount --namespace kube-system tiller
-kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+# Lint the chart
+helm lint <chartname>
+
+# Package the chart into <chartname>.tgz
+helm package <chartname>
+
+# Install chart dependencies
+helm dependency update
 ```
 
-### misc
-
+### dry-run
+```
 helm template . -f values-abc.yaml | less
 
+helm install --dry-run --debug <name> .
+```
+
+### using additional repositories
+```
+helm repo add oteemocharts https://oteemo.github.io/charts
+helm install nexus oteemocharts/sonatype-nexus
+```
+
+### Defining secrets
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-fancy-secret
+type: Opaque
+data:
+  username: {{ .Values.username | b64enc | quote }}
+  password: {{ .Values.password | b64enc | quote }}
+```
