@@ -75,6 +75,15 @@ spec:
 - contains one or more containers that are tightly coupled
 - uses a Container runtime (e.g. Docker)
 
+#### Init Containers
+- example: wait for some other container/service to be available
+    ```
+    initContainers:
+      - name: {{.Chart.Name}}-wait-for-arango
+        image: byrnedo/alpine-curl:0.1.8
+        command: ['sh', '-c', 'code="0"; while [[ $code != "200" && $code != "301" ]]; do echo "not ready, current status code $code waiting for 200 or 301"; code="$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://hugo-plus-arango:8529)"; sleep 5; done']
+    
+    ```
 
 ## ReplicaSets
 
@@ -105,7 +114,8 @@ spec:
         type:  frontend
   ```
 
-- note: ReplicaSets can also manage Pods not created as part of their definition (e.g. Pods that have existed before the creation of the ReplicaSet). That is why the selector is important!
+- note: ReplicaSets can also manage Pods not created as part of their definition (e.g. Pods that have existed before
+the creation of the ReplicaSet). That is why the selector is important!
 - commands
   ```
   # create ReplicaSet based on yaml
@@ -175,15 +185,6 @@ kubectl get all
 
 - default namespace = `Default`
 - k8s reserved NS: `kube-system` and `kube-public`
-- to access resources in a different namespace:
-  ```
-  mysql.connect("db-service.dev.svc.cluster-local")
-
-  # db-service = service name
-  # dev = namespace
-  # svc = Service
-  # cluster-local = domain
-  ```
 
 #### The --namespace option
 ```
@@ -236,6 +237,25 @@ kubectl config set-context $(kubectl config current-context) --namespace=(namesp
       limits.cpu: "10"
       limits.memory: 10Gi
 
+  ```
+
+
+## Access Services and Pods within the cluster
+- to access resources within a given namespace
+  ```
+  mysql.connect("db-service.ns.svc.cluster.local")
+
+  # db-service = service name
+  # ns = namespace
+  # svc = type (service, pod, ...) 
+  # cluster.local = domain
+  ```
+
+- example:
+  ```
+    # curl health check endpoint of a Pod in the default namespace
+    # note: IP is separated with dashes!
+    curl 10-244-183-199.default.pod.cluster.local:8080/internal/health
   ```
 
 
