@@ -1,4 +1,4 @@
-# The golden rule of Terraform
+## The golden rule of Terraform
 *The master branch of the live repository is a 1:1 representation of what’s actually deployed in production.*
 
 
@@ -7,16 +7,14 @@
 
 
 ## Workflow
-
 ```
-# prepare
 terraform init
 
-# what's about to happen
-terraform plan
+terraform plan -out my-plan
 
-# do the action
-terraform apply
+terraform apply my-plan
+
+terraform destroy
 ```
 
 
@@ -24,7 +22,10 @@ terraform apply
 - current state is stored in a file called `tfstate`
   - either stored locally or on a central place (e.g. Amazon S3 bucket)
 - use "import" command to define state of existing infrastructure
-  - example: if you had created an IAM Role manually, you could define that IAM Role in a Terraform template using the aws_iam_role resource, run “terraform import” to tell Terraform to fetch the information for that IAM role and add it to its state file, and from then on, when you run “terraform plan”, Terraform will know that IAM Role already exists and not try to create it again.
+  - example: if you had created an IAM Role manually, you could define that IAM Role in a Terraform template using the
+  aws_iam_role resource, run “terraform import” to tell Terraform to fetch the information for that IAM role and add it
+  to its state file, and from then on, when you run “terraform plan”, Terraform will know that IAM Role already exists
+  and not try to create it again.
 
 ## Modules
 - any set of Terraform templates is a module
@@ -65,7 +66,7 @@ module "frontend" {
 ```
 
 #### Output variables
-- modules can also have output variables! access using `module` prefix!
+- modules can also have output variables! access using module prefix!
 - declaration in module definition `/modules/frontend-app/outputs.tf`
 ```
 output "asg_name" {
@@ -88,8 +89,14 @@ resource "aws_autoscaling_policy" "scale_out" {
 }
 ```
 
+- access output in bash
+```
+terraform output VARIABLE_NAME
+```
+
 #### Module versioning
-- if both your staging and production environment are pointing to the same module folder, changes in that folder will affect both environments on the very next deployment!
+- if both your staging and production environment are pointing to the same module folder, changes in that folder will
+affect both environments on the very next deployment!
 - solution: do not refer to local file path
   - Terraform supports other types of module sources, such as Git URLs, Mercurial URLs, and arbitrary HTTP URLs
 - separate module and infrastructure templates into separate Git repos
@@ -122,7 +129,6 @@ resource "aws_instance" "example" {
 - use an unquoted true or false in Terraform code, it treats it as a 1 or 0, respectively
 
 #### List
--
 ```
 variable "azs" {
   description = "Run the EC2 Instances in these Availability Zones"
@@ -141,7 +147,8 @@ availability_zone = "${element(var.azs, 2)}"
 
 
 #### for-loops
-- Terraform resource has a “meta-parameter” you can use called “count”. This parameter defines how many copies of the resource to create:
+- Terraform resource has a “meta-parameter” you can use called “count”. This parameter defines how many copies of the
+resource to create:
 ```
 resource "aws_instance" "example" {
   count = 3
@@ -172,7 +179,8 @@ resource "aws_instance" "example" {
   ```
 
 - count has a significant limitation: you cannot use dynamic data
-  - “dynamic data” = any data that is fetched from a provider (e.g. AWS) or is only available after a resource has been created (e.g. an output attribute of an EC2 Instance)
+  - “dynamic data” = any data that is fetched from a provider (e.g. AWS) or is only available after a resource has been
+  created (e.g. an output attribute of an EC2 Instance)
   - The cause is that Terraform tries to resolve all the count parameters BEFORE fetching any dynamic data
 
 #### if-statements
@@ -230,6 +238,39 @@ resource "aws_instance" "web" {
 
 - when multiple provisioners are specified within a resource, they are executed in the order they're defined
 - Many provisioners require access to the remote resource. For example, a provisioner may need to use SSH or WinRM to connect to the resource.
+
+
+## Using workspaces
+```
+# create and switch to new workspace 
+terraform workspace new WORKSPACE_ID
+
+# list available workspaces
+terraform workspace list
+
+# switch active workspace
+terraform workspace select abc
+
+# show active workspace
+terraform workspace show
+
+# delete workspace
+terraform workspace delete WORKSPACE_ID
+```
+
+
+## Always execute null-ressource
+```
+resource "null_resource" "additional_command" {
+  provisioner "local-exec" {
+    command = "..."
+  }
+
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+}
+```
 
 
 ## Misc
