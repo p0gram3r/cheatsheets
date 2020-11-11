@@ -1,3 +1,14 @@
+## curl
+```
+-L  --location  --- If the server reports that the requested page has moved to a different location (indicated with a
+                    Location: header and a 3XX response code), this option will make curl redo the request on  the  new
+                    place.
+-s  --silent    --- Silent or quiet mode. Don't show progress meter or error messages.  Makes Curl mute. It will still
+                    output the data you ask for, potentially even to the terminal/stdout unless you redirect it.
+-S --show-error --- When used with "-s", it makes curl show an error message if it fails. 
+```
+
+
 ## netstat
 - prints network connections, routing tables, interface statistics, masquerade connections, and multicast memberships
 
